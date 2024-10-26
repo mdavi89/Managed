@@ -12,7 +12,6 @@ CREATE TABLE roles (
     role_id SERIAL PRIMARY KEY NOT NULL,
     role_name VARCHAR(60) NOT NULL,
     salary INT NOT NULL,
-    department_name VARCHAR(100) NOT NULL,
     department_id INT NOT NULL
     FOREIGN KEY (department_id)
     REFERENCES departments(department_id)
@@ -23,7 +22,6 @@ CREATE TABLE employees (
     id SERIAL PRIMARY KEY,
     first_name VARCHAR(60) NOT NULL,
     last_name VARCHAR(60) NOT NULL,
-    role_name VARCHAR(60) NOT NULL,
     manager VARCHAR(100) NOT NULL,
     role_id INT NOT NULL
     FOREIGN KEY (role_id)
