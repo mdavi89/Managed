@@ -199,6 +199,8 @@ function performTasks() {
       }
       else {
         exit = true;
+        console.log('Thank you for using Managed!')
+        console.log('Goodbye!')
         process.exit(0);
 
       }
