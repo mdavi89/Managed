@@ -1,4 +1,4 @@
-INSERT INTO departments (department_name)
+INSERT INTO departments (name)
 VALUES ('Front Office'),
        ('Head Coach'),
        ('Offensive Coaches'),
@@ -6,7 +6,7 @@ VALUES ('Front Office'),
        ('Special Teams Coaches'),
        ('Strength and Conditioning');
 
-INSERT INTO roles (role_name, salary, department_id)
+INSERT INTO roles (title, salary, department)
 VALUES ('CEO', 10000000, 1),
        ('General Manager', 500000, 1),
        ('Assistant GM', 250000, 1),
@@ -24,20 +24,20 @@ VALUES ('CEO', 10000000, 1),
        ('Special Teams Assistant', 130000, 5),
        ('Head Athletic Trainer', 200000, 6);
 
-INSERT INTO employees (first_name, last_name, manager, role_id)
-VALUES  ('Jeff', 'Lurie','None', 1),
-        ('Howie', 'Roseman','Jeff Lurie', 2),
-        ('Alec', 'Halaby','Howie Roseman', 3),
-        ('Nick', 'Sirianni','Jeff Lurie', 4),
-        ('Kevin', 'Patullo','Nick Sirianni', 5),
-        ('Jemal', 'Singleton','Nick Sirianni', 6),
-        ('Kellen', 'Moore','Nick Sirianni', 7),
-        ('Doug', 'Nussmeier','Kellen Moore', 8),
-        ('Jeff', 'Stoutland','Kellen Moore', 9),
-        ('Vic', 'Fangio','Nick Sirianni', 10),
-        ('Bobby', 'King','Vic Fangio', 11),
-        ('Roy', 'Anderson','Vic Fangio', 12),
-        ('Michael', 'Clay','Nick Sirianni', 13),
-        ('Joe', 'Pannunzio','Michael Clay', 14),
-        ('Tyler', 'Brown','Michael Clay', 15),
-        ('Tom', 'Hunkele','Nick Sirianni', 16);
+INSERT INTO employees (first_name, last_name, manager_id, role_id)
+VALUES  ('Jeff', 'Lurie',NULL, 1),
+        ('Howie', 'Roseman', 1 , 2),
+        ('Alec', 'Halaby', 2 , 3),
+        ('Nick', 'Sirianni', 1 , 4),
+        ('Kevin', 'Patullo', 4 , 5),
+        ('Jemal', 'Singleton', 4 , 6),
+        ('Kellen', 'Moore', 4 , 7),
+        ('Doug', 'Nussmeier', 7 , 8),
+        ('Jeff', 'Stoutland', 7 , 9),
+        ('Vic', 'Fangio', 4 , 10),
+        ('Bobby', 'King', 10 , 11),
+        ('Roy', 'Anderson', 10 , 12),
+        ('Michael', 'Clay', 4 , 13),
+        ('Joe', 'Pannunzio', 13 , 14),
+        ('Tyler', 'Brown', 13 , 15),
+        ('Tom', 'Hunkele', 4 , 16);
