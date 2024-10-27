@@ -44,7 +44,17 @@ function viewEmployees() {
 }
 
 function addDepartments(department: string) {
-  pool.query('INSERT INTO departments(name) VALUES ($1)', [department],(err: Error, result: QueryResult) => {
+  pool.query('INSERT INTO departments (name) VALUES ($1)', [department],(err: Error, result: QueryResult) => {
+    if (err) {
+      console.log(err);
+    } else if (result) {
+      console.log(result.rows);
+    }
+  })
+}
+
+function addRoles(title: string, salary: number, department: number) {
+  pool.query('INSERT INTO roles (title, salary, department) VALUES ($1, $2, $3)', [title,salary,department],(err: Error, result: QueryResult) => {
     if (err) {
       console.log(err);
     } else if (result) {
