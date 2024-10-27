@@ -57,7 +57,7 @@ function addDepartments() {
     if (err) {
       console.log(err);
     } else if (result) {
-      console.log(result.rows);
+      console.log('Department added!');
       performTasks();
     }
   })
@@ -87,7 +87,7 @@ function addRoles() {
     if (err) {
       console.log(err);
     } else if (result) {
-      console.log(result.rows);
+      console.log('Role added!');
       performTasks();
     }
   })
@@ -109,19 +109,19 @@ function addEmployees() {
     {
       type: 'input',
       name: 'manager_id',
-      message: 'Enter the manager for the new employee: '
+      message: 'Enter the manager id for the new employee: '
     },
     {
       type: 'input',
       name: 'role_id',
-      message: 'Enter the job title of the employee: '
+      message: 'Enter the job title id of the employee: '
     }
   ]) .then((answers) => 
   pool.query('INSERT INTO employees (first_name, last_name, manager_id, role_id) VALUES ($1, $2, $3, $4)', [answers.first_name,answers.last_name,answers.manager_id,answers.role_id],(err: Error, result: QueryResult) => {
     if (err) {
       console.log(err);
     } else if (result) {
-      console.log(result.rows);
+      console.log('Employee added!');
       performTasks();
     }
   })
