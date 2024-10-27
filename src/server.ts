@@ -23,6 +23,15 @@ function viewDepartments() {
   })
 }
 
+function viewRoles() {
+  pool.query('SELECT * FROM roles', (err: Error, result: QueryResult) => {
+    if (err) {
+      console.log(err);
+    } else if (result) {
+      console.log(result.rows);
+    }
+  })
+}
 
 // Default response for any other request (Not Found)
 app.use((_req, res) => {
