@@ -58,6 +58,7 @@ function addDepartments() {
       console.log(err);
     } else if (result) {
       console.log(result.rows);
+      performTasks();
     }
   })
 )
@@ -87,6 +88,7 @@ function addRoles() {
       console.log(err);
     } else if (result) {
       console.log(result.rows);
+      performTasks();
     }
   })
 )
@@ -120,6 +122,7 @@ function addEmployees() {
       console.log(err);
     } else if (result) {
       console.log(result.rows);
+      performTasks();
     }
   })
 )
@@ -159,15 +162,19 @@ function performTasks() {
       }
       else if (answers.action === 'Add a Department') {
         addDepartments();
+        return;
       }
       else if (answers.action === 'Add a Role') {
         addRoles();
+        return;
       }
       else if (answers.action === 'Add an Employee') {
         addEmployees();
+        return;
       }
       else if (answers.action === 'Update the Role of an Employee') {
         updateEmployee();
+        return;
       }
       else {
         exit = true;
