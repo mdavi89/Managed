@@ -63,6 +63,16 @@ function addRoles(title: string, salary: number, department: number) {
   })
 }
 
+function addEmployees(first_name: string, last_name: string, manager_id: number, role_id: number) {
+  pool.query('INSERT INTO employees (first_name, last_name, manager_id, role_id) VALUES ($1, $2, $3, $4)', [first_name,last_name,manager_id,role_id],(err: Error, result: QueryResult) => {
+    if (err) {
+      console.log(err);
+    } else if (result) {
+      console.log(result.rows);
+    }
+  })
+}
+
 // Default response for any other request (Not Found)
 app.use((_req, res) => {
   res.status(404).end();
