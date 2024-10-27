@@ -19,19 +19,33 @@ function viewDepartments() {
     if (err) {
       console.log(err);
     } else if (result) {
-      console.log(result.rows);
+      console.log(`
+        
+ID      Department
+--------------------------------------------------------------`
+);
+      for (let i = 0; i < result.rows.length; i++){
+        console.log(`${result.rows[i].id}       ${result.rows[i].name}`);
+      };
     }
   })
 };
 
 function viewRoles() {
-  pool.query('SELECT * FROM roles', (err: Error, result: QueryResult) => {
+  pool.query('SELECT * FROM roles JOIN departments ON roles.department = departments.id', (err: Error, result: QueryResult) => {
     if (err) {
       console.log(err);
     } else if (result) {
-      console.log(result.rows);
-    }
-  })
+      console.log(`
+        
+Title      Role ID      Department            Salary
+--------------------------------------------------------------`
+        );
+              for (let i = 0; i < result.rows.length; i++){
+                console.log(`${result.rows[i].title}       ${result.rows[i].id}       ${result.rows[i].name}       ${result.rows[i].salary}`);
+              };
+            }
+          })
 };
 
 function viewEmployees() {
@@ -39,9 +53,16 @@ function viewEmployees() {
     if (err) {
       console.log(err);
     } else if (result) {
-      console.log(result.rows);
-    }
-  })
+      console.log(`
+        
+        Title      Role ID      Department            Salary
+        --------------------------------------------------------------`
+        );
+              for (let i = 0; i < result.rows.length; i++){
+                console.log(`${result.rows[i].title}       ${result.rows[i].id}       ${result.rows[i].name}       ${result.rows[i].salary}`);
+              };
+            }
+          })
 };
 
 function addDepartments() {
@@ -57,7 +78,7 @@ function addDepartments() {
     if (err) {
       console.log(err);
     } else if (result) {
-      console.log('Department added!');
+      console.log(`Department ${answers.department} added!`);
       performTasks();
     }
   })
@@ -87,7 +108,7 @@ function addRoles() {
     if (err) {
       console.log(err);
     } else if (result) {
-      console.log('Role added!');
+      console.log(`Role ${answers.role} added!`);
       performTasks();
     }
   })
@@ -121,7 +142,7 @@ function addEmployees() {
     if (err) {
       console.log(err);
     } else if (result) {
-      console.log('Employee added!');
+      console.log(`Employee ${answers.first_name} ${answers.last_name} added!`);
       performTasks();
     }
   })
@@ -178,6 +199,8 @@ function performTasks() {
       }
       else {
         exit = true;
+        process.exit(0);
+
       }
       if (!exit){
           performTasks();
