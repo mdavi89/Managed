@@ -129,6 +129,56 @@ function updateEmployee(){
 
 };
 
+function performTasks() {
+  let exit: boolean = false;
+  inquirer.prompt([
+    {
+        type: 'list',
+        name: 'action',
+        message: 'Select an action:',
+        choices: [
+          'View All Departments',
+          'View All Roles',
+          'View All Employees',
+          'Add a Department',
+          'Add a Role',
+          'Add an Employee',
+          'Update the Role of an Employee',
+          'Exit',
+        ],
+    },
+  ]) .then((answers) =>{
+      if (answers.action === 'View All Departments') {
+        viewDepartments();
+      }
+      else if (answers.action === 'View All Roles') {
+        viewRoles();
+      }
+      else if (answers.action === 'View All Employees') {
+        viewEmployees();
+      }
+      else if (answers.action === 'Add a Department') {
+        addDepartments();
+      }
+      else if (answers.action === 'Add a Role') {
+        addRoles();
+      }
+      else if (answers.action === 'Add an Employee') {
+        addEmployees();
+      }
+      else if (answers.action === 'Update the Role of an Employee') {
+        updateEmployee();
+      }
+      else {
+        exit = true;
+      }
+      if (!exit){
+          performTasks();
+      }
+      
+  })
+}
+
 // Default response for any other request (Not Found)
 app.use((_req, res) => {
   res.status(404).end();
@@ -137,4 +187,5 @@ app.use((_req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+performTasks();
 
