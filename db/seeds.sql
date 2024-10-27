@@ -25,7 +25,7 @@ VALUES ('CEO', 10000000, 1),
        ('Head Athletic Trainer', 200000, 6);
 
 INSERT INTO employees (first_name, last_name, manager_id, role_id)
-VALUES  ('Jeff', 'Lurie',NULL, 1),
+VALUES  ('Jeff', 'Lurie', NULL , 1),
         ('Howie', 'Roseman', 1 , 2),
         ('Alec', 'Halaby', 2 , 3),
         ('Nick', 'Sirianni', 1 , 4),

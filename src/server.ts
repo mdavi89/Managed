@@ -13,13 +13,16 @@ app.use(express.json());
 
 
 
-pool.query('SELECT * FROM employees', (err: Error, result: QueryResult) => {
-  if (err) {
-    console.log(err);
-  } else if (result) {
-    console.log(result.rows);
-  }
-});
+function viewDepartments() {
+  pool.query('SELECT * FROM departments', (err: Error, result: QueryResult) => {
+    if (err) {
+      console.log(err);
+    } else if (result) {
+      console.log(result.rows);
+    }
+  })
+}
+
 
 // Default response for any other request (Not Found)
 app.use((_req, res) => {
@@ -29,3 +32,4 @@ app.use((_req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
