@@ -65,6 +65,25 @@ function viewEmployeesByManager() {
 )
 };
 
+function viewEmployeesByDepartment() {
+  inquirer.prompt([
+    {
+      type: 'input',
+      name: 'department',
+      message: 'Enter the name of the department: '
+    }
+  ]) .then((answers) => 
+  
+  pool.query('SELECT * FROM employees WHERE department = $1', [answers.department],(err: Error, result: QueryResult) => {
+    if (err) {
+      console.log(err);
+    } else if (result) {
+      console.table(result.rows);
+    }
+  })
+)
+};
+
 function addDepartments() {
   inquirer.prompt([
     {
@@ -211,6 +230,7 @@ function performTasks() {
           'View All Roles',
           'View All Employees',
           'View Employees by Manager',
+          'View Employees by Department',
           'Add a Department',
           'Add a Role',
           'Add an Employee',
@@ -231,6 +251,9 @@ function performTasks() {
       }
       else if (answers.action === 'View Employees by Manager') {
         viewEmployeesByManager();
+      }
+      else if (answers.action === 'View Employees by Department') {
+        viewEmployeesByDepartment();
       }
       else if (answers.action === 'Add a Department') {
         addDepartments();
