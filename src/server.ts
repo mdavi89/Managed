@@ -19,14 +19,7 @@ function viewDepartments() {
     if (err) {
       console.log(err);
     } else if (result) {
-      console.log(`
-        
-ID      Department
---------------------------------------------------------------`
-);
-      for (let i = 0; i < result.rows.length; i++){
-        console.log(`${result.rows[i].id}       ${result.rows[i].name}`);
-      };
+      console.table(result.rows);
     }
   })
 };
@@ -36,14 +29,8 @@ function viewRoles() {
     if (err) {
       console.log(err);
     } else if (result) {
-      console.log(`
-        
-Title      Role ID      Department            Salary
---------------------------------------------------------------`
-        );
-              for (let i = 0; i < result.rows.length; i++){
-                console.log(`${result.rows[i].title}       ${result.rows[i].id}       ${result.rows[i].name}       ${result.rows[i].salary}`);
-              };
+      console.table(result.rows);
+              
             }
           })
 };
@@ -53,14 +40,8 @@ function viewEmployees() {
     if (err) {
       console.log(err);
     } else if (result) {
-      console.log(`
-        
-        Title      Role ID      Department            Salary
-        --------------------------------------------------------------`
-        );
-              for (let i = 0; i < result.rows.length; i++){
-                console.log(`${result.rows[i].title}       ${result.rows[i].id}       ${result.rows[i].name}       ${result.rows[i].salary}`);
-              };
+      console.table(result.rows);
+              
             }
           })
 };
@@ -150,7 +131,28 @@ function addEmployees() {
 };
 
 function updateEmployee(){
-
+  inquirer.prompt([
+    {
+      type: 'input',
+      name: 'employee',
+      message: 'Enter the name of the employee to update: '
+    },
+    {
+      type: 'input',
+      name: 'role',
+      message: 'Enter the new role for the employee: '
+    }
+  ]) .then((answers) => 
+  
+  pool.query(`UPDATE employees SET role_id = '$1' WHERE id = $2`, [answers.role, answers.employee],(err: Error, result: QueryResult) => {
+    if (err) {
+      console.log(err);
+    } else if (result) {
+      console.log(`Employee updated!`);
+      performTasks();
+    }
+  })
+)
 };
 
 function performTasks() {
