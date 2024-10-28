@@ -15,7 +15,7 @@ app.use(express.json());
 
 
 function viewDepartments() {
-  pool.query('SELECT * FROM departments', (err: Error, result: QueryResult) => {
+  pool.query('SELECT departments.id AS "ID", departments.name AS "Department" FROM departments', (err: Error, result: QueryResult) => {
     if (err) {
       console.log(err);
     } else if (result) {
@@ -25,7 +25,7 @@ function viewDepartments() {
 };
 
 function viewRoles() {
-  pool.query('SELECT * FROM roles JOIN departments ON roles.department = departments.id', (err: Error, result: QueryResult) => {
+  pool.query('SELECT roles.title AS "Job Title", roles.id AS "Role ID", departments.name AS "Department", roles.salary AS "Salary" FROM roles JOIN departments ON roles.department = departments.id', (err: Error, result: QueryResult) => {
     if (err) {
       console.log(err);
     } else if (result) {
@@ -36,7 +36,7 @@ function viewRoles() {
 };
 
 function viewEmployees() {
-  pool.query('SELECT * FROM employees', (err: Error, result: QueryResult) => {
+  pool.query('SELECT employees.first_name AS "First Name", employees.last_name AS "Last Name", roles.title AS "Job Title", roles.salary AS "Salary", departments.name AS "Department" FROM employees JOIN roles ON employees.role_id = roles.id JOIN departments ON roles.department = departments.id', (err: Error, result: QueryResult) => {
     if (err) {
       console.log(err);
     } else if (result) {
@@ -247,7 +247,7 @@ function deleteRole(){
     },
   ]) .then((answers) => 
   
-  pool.query(`DELETE FROM roless WHERE id = '$1'`, [answers.role],(err: Error, result: QueryResult) => {
+  pool.query(`DELETE FROM roles WHERE id = '$1'`, [answers.role],(err: Error, result: QueryResult) => {
     if (err) {
       console.log(err);
     } else if (result) {
