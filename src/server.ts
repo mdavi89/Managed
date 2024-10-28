@@ -218,6 +218,66 @@ function updateEmployeeManager(){
 )
 };
 
+function deleteDepartment(){
+  inquirer.prompt([
+    {
+      type: 'input',
+      name: 'department',
+      message: 'Enter the name of the department to delete: '
+    },
+  ]) .then((answers) => 
+  
+  pool.query(`DELETE FROM departments WHERE id = '$1'`, [answers.department],(err: Error, result: QueryResult) => {
+    if (err) {
+      console.log(err);
+    } else if (result) {
+      console.log(`Department deleted!`);
+      performTasks();
+    }
+  })
+)
+};
+
+function deleteEmployee(){
+  inquirer.prompt([
+    {
+      type: 'input',
+      name: 'employee',
+      message: 'Enter the name of the employee to delete: '
+    },
+  ]) .then((answers) => 
+  
+  pool.query(`DELETE FROM employees WHERE id = '$1'`, [answers.employee],(err: Error, result: QueryResult) => {
+    if (err) {
+      console.log(err);
+    } else if (result) {
+      console.log(`Employee deleted!`);
+      performTasks();
+    }
+  })
+)
+};
+
+function deleteRole(){
+  inquirer.prompt([
+    {
+      type: 'input',
+      name: 'role',
+      message: 'Enter the name of the role to delete: '
+    },
+  ]) .then((answers) => 
+  
+  pool.query(`DELETE FROM roless WHERE id = '$1'`, [answers.role],(err: Error, result: QueryResult) => {
+    if (err) {
+      console.log(err);
+    } else if (result) {
+      console.log(`Role deleted!`);
+      performTasks();
+    }
+  })
+)
+};
+
 function performTasks() {
   let exit: boolean = false;
   inquirer.prompt([
