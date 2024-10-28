@@ -238,26 +238,6 @@ function deleteDepartment(){
 )
 };
 
-function deleteEmployee(){
-  inquirer.prompt([
-    {
-      type: 'input',
-      name: 'employee',
-      message: 'Enter the name of the employee to delete: '
-    },
-  ]) .then((answers) => 
-  
-  pool.query(`DELETE FROM employees WHERE id = '$1'`, [answers.employee],(err: Error, result: QueryResult) => {
-    if (err) {
-      console.log(err);
-    } else if (result) {
-      console.log(`Employee deleted!`);
-      performTasks();
-    }
-  })
-)
-};
-
 function deleteRole(){
   inquirer.prompt([
     {
@@ -278,6 +258,53 @@ function deleteRole(){
 )
 };
 
+function deleteEmployee(){
+  inquirer.prompt([
+    {
+      type: 'input',
+      name: 'employee',
+      message: 'Enter the name of the employee to delete: '
+    },
+  ]) .then((answers) => 
+  
+  pool.query(`DELETE FROM employees WHERE id = '$1'`, [answers.employee],(err: Error, result: QueryResult) => {
+    if (err) {
+      console.log(err);
+    } else if (result) {
+      console.log(`Employee deleted!`);
+      performTasks();
+    }
+  })
+)
+};
+
+function deleteActions() {
+  inquirer.prompt([
+    {
+      type: 'list',
+      name: 'action',
+      message: 'Select department, role, or employee: ',
+      choices: [
+        'Department',
+        'Role',
+        'Employee'
+      ]
+    }
+  ]) .then((answers) => {
+      if (answers.action === 'Department') {
+        deleteDepartment();
+        return;
+      }
+      else if (answers.action === 'Role') {
+        deleteRole();
+        return;
+      } else {
+        deleteEmployee();
+        return;
+      }
+})
+};
+
 function performTasks() {
   let exit: boolean = false;
   inquirer.prompt([
@@ -296,6 +323,7 @@ function performTasks() {
           'Add an Employee',
           'Update the Role of an Employee',
           'Update the Manager of an Employee',
+          'Delete a Department, Role, or Employee',
           'Exit',
         ],
     },
@@ -333,6 +361,10 @@ function performTasks() {
       }
       else if (answers.action === 'Update the Manager of an Employee') {
         updateEmployeeManager();
+        return;
+      }
+      else if (answers.action === 'Delete a Department, Role, or Employee') {
+        deleteActions();
         return;
       }
       else {
