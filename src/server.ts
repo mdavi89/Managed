@@ -46,6 +46,25 @@ function viewEmployees() {
           })
 };
 
+function viewEmployeesByManager() {
+  inquirer.prompt([
+    {
+      type: 'input',
+      name: 'manager',
+      message: 'Enter the name of the manager: '
+    }
+  ]) .then((answers) => 
+  
+  pool.query('SELECT * FROM employees WHERE manager_id = $1', [answers.manager],(err: Error, result: QueryResult) => {
+    if (err) {
+      console.log(err);
+    } else if (result) {
+      console.table(result.rows);
+    }
+  })
+)
+};
+
 function addDepartments() {
   inquirer.prompt([
     {
@@ -155,6 +174,31 @@ function updateEmployee(){
 )
 };
 
+function updateEmployeeManager(){
+  inquirer.prompt([
+    {
+      type: 'input',
+      name: 'employee',
+      message: 'Enter the name of the employee to update: '
+    },
+    {
+      type: 'input',
+      name: 'manager',
+      message: 'Enter the new manager for the employee: '
+    }
+  ]) .then((answers) => 
+  
+  pool.query(`UPDATE employees SET manager_id = '$1' WHERE id = $2`, [answers.manager, answers.employee],(err: Error, result: QueryResult) => {
+    if (err) {
+      console.log(err);
+    } else if (result) {
+      console.log(`Employee updated!`);
+      performTasks();
+    }
+  })
+)
+};
+
 function performTasks() {
   let exit: boolean = false;
   inquirer.prompt([
@@ -166,10 +210,12 @@ function performTasks() {
           'View All Departments',
           'View All Roles',
           'View All Employees',
+          'View Employees by Manager',
           'Add a Department',
           'Add a Role',
           'Add an Employee',
           'Update the Role of an Employee',
+          'Update the Manager of an Employee',
           'Exit',
         ],
     },
@@ -182,6 +228,9 @@ function performTasks() {
       }
       else if (answers.action === 'View All Employees') {
         viewEmployees();
+      }
+      else if (answers.action === 'View Employees by Manager') {
+        viewEmployeesByManager();
       }
       else if (answers.action === 'Add a Department') {
         addDepartments();
@@ -197,6 +246,10 @@ function performTasks() {
       }
       else if (answers.action === 'Update the Role of an Employee') {
         updateEmployee();
+        return;
+      }
+      else if (answers.action === 'Update the Manager of an Employee') {
+        updateEmployeeManager();
         return;
       }
       else {
