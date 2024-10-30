@@ -5,12 +5,12 @@ CREATE DATABASE employees_db;
 
 CREATE TABLE departments (
   id SERIAL PRIMARY KEY,
-  name VARCHAR(100) NOT NULL
+  name VARCHAR(100) UNIQUE NOT NULL
 );
 
 CREATE TABLE roles (
     id SERIAL PRIMARY KEY,
-    title VARCHAR(60) NOT NULL,
+    title VARCHAR(60) UNIQUE NOT NULL,
     salary INT NOT NULL,
     department INT NOT NULL,
     FOREIGN KEY (department)

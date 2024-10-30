@@ -13,6 +13,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 
+function destructureEmployee(answers: any) {
+    const { id } = answers;
+    return id;
+}
+
 
 function viewDepartments() {
   pool.query('SELECT departments.id AS "ID", departments.name AS "Department" FROM departments', (err: Error, result: QueryResult) => {
@@ -46,42 +51,42 @@ function viewEmployees() {
           })
 };
 
-function viewEmployeesByManager() {
-  inquirer.prompt([
-    {
-      type: 'input',
-      name: 'manager',
-      message: 'Enter the name of the manager: '
-    }
-  ]) .then((answers) => 
-  
-  pool.query('SELECT * FROM employees WHERE manager_id = $1', [answers.manager],(err: Error, result: QueryResult) => {
-    if (err) {
-      console.log(err);
-    } else if (result) {
-      console.table(result.rows);
-    }
-  })
-)
+const viewEmployeesByManager = async () => {
+  try {
+    const answers = await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'manager',
+        message: 'Enter the last name of the manager: '
+      }
+    ]);
+    const man_id = await pool.query('SELECT employees.id FROM employees WHERE employees.last_name = $1', [answers.manager]); 
+    const { id } = man_id.rows[0];
+    const result = await pool.query('SELECT employees.first_name AS "First Name", employees.last_name AS "Last Name", roles.title AS "Job Title", roles.salary AS "Salary", departments.name AS "Department" FROM employees JOIN roles ON employees.role_id = roles.id JOIN departments ON roles.department = departments.id WHERE manager_id = $1', [id]);
+    console.table(result.rows);
+    performTasks();
+  } catch (err) {
+    console.error(err);
+  }
 };
 
-function viewEmployeesByDepartment() {
-  inquirer.prompt([
-    {
-      type: 'input',
-      name: 'department',
-      message: 'Enter the name of the department: '
-    }
-  ]) .then((answers) => 
-  
-  pool.query('SELECT * FROM employees WHERE department = $1', [answers.department],(err: Error, result: QueryResult) => {
-    if (err) {
-      console.log(err);
-    } else if (result) {
-      console.table(result.rows);
-    }
-  })
-)
+const viewEmployeesByDepartment = async () => {
+  try {
+    const answers = await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'department',
+        message: 'Enter the name of the department: '
+      }
+    ]);
+    const dep_id = await pool.query('SELECT departments.id FROM departments WHERE departments.name = $1', [answers.department]); 
+    const id = destructureEmployee(dep_id.rows[0]);
+    const result = await pool.query('SELECT employees.first_name AS "First Name", employees.last_name AS "Last Name", roles.title AS "Job Title", roles.salary AS "Salary", departments.name AS "Department" FROM employees JOIN roles ON employees.role_id = roles.id JOIN departments ON roles.department = departments.id WHERE roles.department = $1', [id]);
+    console.table(result.rows);
+    performTasks();
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 function addDepartments() {
@@ -168,114 +173,126 @@ function addEmployees() {
 )
 };
 
-function updateEmployee(){
-  inquirer.prompt([
-    {
-      type: 'input',
-      name: 'employee',
-      message: 'Enter the name of the employee to update: '
-    },
-    {
-      type: 'input',
-      name: 'role',
-      message: 'Enter the new role for the employee: '
-    }
-  ]) .then((answers) => 
-  
-  pool.query(`UPDATE employees SET role_id = '$1' WHERE id = $2`, [answers.role, answers.employee],(err: Error, result: QueryResult) => {
-    if (err) {
-      console.log(err);
-    } else if (result) {
-      console.log(`Employee updated!`);
+async function updateEmployee(){
+  try {
+    let answers = await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'employee',
+        message: 'Enter the last name of the employee to update: '
+      },
+      {
+        type: 'input',
+        name: 'role',
+        message: 'Enter the new Role: '
+      }
+    ])
+    const oldID = await pool.query(`SELECT employees.id FROM employees WHERE employees.last_name = $1`, [answers.employee]);
+    const emp_id = destructureEmployee(oldID.rows[0]);
+    const newID = await pool.query(`SELECT roles.id FROM roles WHERE roles.title = $1`, [answers.role]);
+    const role_id = destructureEmployee(newID.rows[0]);
+    const result = await pool.query(`UPDATE employees SET role_id = $1 WHERE id = $2`, [role_id, emp_id]);
+    if (result) {
+      console.log('Employee updated!');
       performTasks();
     }
-  })
-)
+  }catch (err) {
+    console.error(err);
+  }
 };
 
-function updateEmployeeManager(){
-  inquirer.prompt([
-    {
-      type: 'input',
-      name: 'employee',
-      message: 'Enter the name of the employee to update: '
-    },
-    {
-      type: 'input',
-      name: 'manager',
-      message: 'Enter the new manager for the employee: '
-    }
-  ]) .then((answers) => 
-  
-  pool.query(`UPDATE employees SET manager_id = '$1' WHERE id = $2`, [answers.manager, answers.employee],(err: Error, result: QueryResult) => {
-    if (err) {
-      console.log(err);
-    } else if (result) {
-      console.log(`Employee updated!`);
+async function updateEmployeeManager(){
+  try {
+    let answers = await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'employee',
+        message: 'Enter the last name of the employee to update: '
+      },
+      {
+        type: 'input',
+        name: 'manager',
+        message: 'Enter the last name of the new manager: '
+      }
+    ])
+    const oldID = await pool.query(`SELECT employees.id FROM employees WHERE employees.last_name = $1`, [answers.employee]);
+    const emp_id = destructureEmployee(oldID.rows[0]);
+    const newID = await pool.query(`SELECT employees.id FROM employees WHERE employees.last_name = $1`, [answers.manager]);
+    const man_id = destructureEmployee(newID.rows[0]);
+    const result = await pool.query(`UPDATE employees SET manager_id = $1 WHERE id = $2`, [man_id, emp_id]);
+    if (result) {
+      console.log('Employee updated!');
       performTasks();
     }
-  })
-)
+  }catch (err) {
+    console.error(err);
+  }
 };
 
-function deleteDepartment(){
-  inquirer.prompt([
-    {
-      type: 'input',
-      name: 'department',
-      message: 'Enter the name of the department to delete: '
-    },
-  ]) .then((answers) => 
-  
-  pool.query(`DELETE FROM departments WHERE id = '$1'`, [answers.department],(err: Error, result: QueryResult) => {
-    if (err) {
-      console.log(err);
-    } else if (result) {
-      console.log(`Department deleted!`);
+async function deleteDepartment(){
+  try{
+    const answers = await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'department',
+        message: 'Enter the name of the department to delete: '
+      },
+    ]);
+    const id = await pool.query(`SELECT departments.id FROM departments WHERE departments.name = $1`, [answers.department]);
+    const delId = destructureEmployee(id.rows[0]);
+    const result = await pool.query(`DELETE FROM departments WHERE id = $1`, [delId])
+    if (result) {
+      console.log(`Department Deleted!`);
       performTasks();
     }
-  })
-)
+  }
+  catch (err) {
+    console.error(err);
+  }
 };
 
-function deleteRole(){
-  inquirer.prompt([
-    {
-      type: 'input',
-      name: 'role',
-      message: 'Enter the name of the role to delete: '
-    },
-  ]) .then((answers) => 
-  
-  pool.query(`DELETE FROM roles WHERE id = '$1'`, [answers.role],(err: Error, result: QueryResult) => {
-    if (err) {
-      console.log(err);
-    } else if (result) {
-      console.log(`Role deleted!`);
+async function deleteRole(){
+  try{
+    const answers = await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'role',
+        message: 'Enter the name of the role to delete: '
+      },
+    ]);
+    const id = await pool.query(`SELECT roles.id FROM roles WHERE roles.title = $1`, [answers.role]);
+    const delId = destructureEmployee(id.rows[0]);
+    const result = await pool.query(`DELETE FROM roles WHERE id = $1`, [delId])
+    if (result) {
+      console.log(`Role Deleted!`);
       performTasks();
     }
-  })
-)
+  }
+  catch (err) {
+    console.error(err);
+  }
 };
 
-function deleteEmployee(){
-  inquirer.prompt([
-    {
-      type: 'input',
-      name: 'employee',
-      message: 'Enter the name of the employee to delete: '
-    },
-  ]) .then((answers) => 
-  
-  pool.query(`DELETE FROM employees WHERE id = '$1'`, [answers.employee],(err: Error, result: QueryResult) => {
-    if (err) {
-      console.log(err);
-    } else if (result) {
-      console.log(`Employee deleted!`);
+async function deleteEmployee(){
+  try{
+    const answers = await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'employee',
+        message: 'Enter the last name of the employee to delete: '
+      },
+    ]);
+    const id = await pool.query(`SELECT employees.id FROM employees WHERE employees.last_name = $1`, [answers.role]);
+    const delId = destructureEmployee(id.rows[0]);
+    const result = await pool.query(`DELETE FROM employees WHERE id = $1`, [delId])
+    if (result) {
+      console.log(`Employee Deleted!`);
       performTasks();
     }
-  })
-)
+  }
+  catch (err) {
+    console.error(err);
+  }
 };
 
 function deleteActions() {
@@ -339,9 +356,11 @@ function performTasks() {
       }
       else if (answers.action === 'View Employees by Manager') {
         viewEmployeesByManager();
+        return;
       }
       else if (answers.action === 'View Employees by Department') {
         viewEmployeesByDepartment();
+        return;
       }
       else if (answers.action === 'Add a Department') {
         addDepartments();
