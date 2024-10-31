@@ -16,8 +16,27 @@ app.use(express.json());
 function destructureEmployee(answers: any) {
     const { id } = answers;
     return id;
-}
+};
 
+function greeting() {
+    console.log(`
+
+ __       __                                                          __ 
+|  \     /  \                                                        |  \
+| $$\   /  $$  ______   _______    ______    ______    ______    ____| $$
+| $$$\ /  $$$ |      \ |       \  |      \  /      \  /      \  /      $$
+| $$$$\  $$$$  \$$$$$$\| $$$$$$$\  \$$$$$$\|  $$$$$$\|  $$$$$$\|  $$$$$$$
+| $$\$$ $$ $$ /      $$| $$  | $$ /      $$| $$  | $$| $$    $$| $$  | $$
+| $$ \$$$| $$|  $$$$$$$| $$  | $$|  $$$$$$$| $$__| $$| $$$$$$$$| $$__| $$
+| $$  \$ | $$ \$$    $$| $$  | $$ \$$    $$ \$$    $$ \$$     \ \$$    $$
+ \$$      \$$  \$$$$$$$ \$$   \$$  \$$$$$$$ _\$$$$$$$  \$$$$$$$  \$$$$$$$
+                                           |  \__| $$                    
+                                            \$$    $$                    
+                                             \$$$$$$   
+                                             
+  Welcome to Managed!
+  What would you like to do today?`)
+};
 
 function viewDepartments() {
   pool.query('SELECT departments.id AS "ID", departments.name AS "Department" FROM departments', (err: Error, result: QueryResult) => {
@@ -414,5 +433,6 @@ app.use((_req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+greeting();
 performTasks();
 
